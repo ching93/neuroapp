@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'js/network.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/network.css' %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <form action="{% url 'network_edit' %}" method="GET" class="form form-vertical text-left" id="layers_form">
+                    {% csrf_token %}
+                    <label>Редактирование архитектуры</label>
+                    <div class="form-group text-left">
+                        <span class="form-error">{{errorMessage}}</span>
+                    </div>
+                    <div class="form-group text-left">
+                        <span class="form-success">{{successMessage}}</span>
+                    </div>
+                    <div class="form-group currentArch">
+                        <label>Выберите текущую архитектуру</label>
+                            <span class="form-error">{{ networkLayersForm.model.errors }}</span>
+                        {{ networkLayersForm.model }}
+                    </div>
+
+                    <div class="form-horizontal layerTypeForm">
+                        <div class="form-group layerType text-left">
+                            <label for="">Выберите тип слоя</label>
+                            <span class="form-error">{{ networkLayersForm.layerType.errors }}</span>
+                            {{ networkLayersForm.layerType }}
+                        </div>
+                        <div class="form-group param kernelSize text-left" hidden>
+                            <label for="">Введите размер ядра</label>
+                            <span class="form-error">{{ networkLayersForm.kernelSize.errors }}</span>
+                            <input type="number" name="{{ networkLayersForm.kernelSize.name }}" value="0">
+                        </div>
+                        <div class="form-group param kernelAmount text-left" hidden>
+                            <label for="">Введите число ядер</label>
+                            <span class="form-error">{{ networkLayersForm.kernelAmount.errors }}</span>
+                            <input type="number" name="{{ networkLayersForm.kernelAmount.name }}" value="0">
+                        </div>
+                        <div class="form-group param neuronAmount text-left" hidden>
+                            <label for="">Введите число нейронов</label>
+                            <span class="form-error">{{ networkLayersForm.neuronAmount.errors }}</span>
+                            <input type="number" name="{{ networkLayersForm.neuronAmount.name }}" value="0">
+                        </div>
+                        <div class="form-group text-left">
+                            <button onclick="removeLayer(event.srcElement)" type="button" class="btn btn-success btn-buy">Убрать слой</button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-success btn-add-layer">Добавить слой</button>
+                        <button type="submit" class="btn btn-success btn-submit-layer">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4">
+                <form action="{% url 'network_edit' %}" method="POST" class="form-inline text-center">
+                    {% csrf_token %}
+                    <label>Редактирование архитектуры</label>
+                    <div>
+                        <label for="">Введите название</label>
+                        <input type="text" name="{{ networkModelForm.name.name }}">
+                    </div>
+                    <button type="submit" id="submit_btn" class="btn btn-success btn-buy">Создать</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

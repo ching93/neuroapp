@@ -1,0 +1,15 @@
+
+
+#log {
+    position: fixed;
+    display: table;
+    left: 50px;
+    top: 50px;
+    font-size: 14pt;
+}
+.error {
+    color: red;
+}
+.success {
+    color: limegreen;
+}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'js/network_run.js' %}"></script>
+    <link rel=stylesheet type="text/css" href="{% static 'css/network.css' %}" />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <form action="/ws/network/train/" method="POST" class="form-vertical text-left" id="init-form">
+                    {% csrf_token %}
+                    <div class="form-group model-select text-left">
+                        <label>Выберите архитектуру</label>
+                        {{ networkLayersForm.model }}
+                        <button class="btn btn-success" id="model-select-btn">Выбрать</button>
+                    </div>
+                    <div class="form-group weight-select text-left" hidden>
+                        <label>Выберите набор весов</label>
+                    </div>
+                    <div class="form-group text-left">
+                        <label for="">Количество эпох</label>
+                        <input type="number" name="epochs" value='5'>
+                    </div>
+                    <div class="form-group text-left">
+                        <label>Интервал примеров</label>
+                        <span>С </span><input type="number" name="from" value=1><span> По </span><input type="number" name="till" value=100>
+                    </div>
+                    <div class="form-group text-left">
+                        <label>Количество примеров в партии</label>
+                        <input type="number" name="batch-size" value='5'>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4">
+                <button class="btn btn-success btn-buy" id="start-learn-btn">Начать обучение</button>
+                <div class="status" id='status' hidden >
+                    <p class="message"></p>
+                    <p>Ошибка: <span class="error-val"></span>.</p>
+                    <p>Точность: <span class="acc-val"></span>.</p>
+                    <p>Эпохи: <span class="current-epoch"></span> из <span class="epochs"></span></p>
+                    <p>Партии: <span class="current-batch"></span> из <span class="batches"></span></p>
+                    <div class="test-result" hidden>
+                        <p>Точность на тестовом множестве: <span class="test-err"></span></p>
+                        <p>% правильно распознанных примеров: <span class="percent"></span></p>
+                    </div>
+                </div>
+                <div id="plot-div">
+                    <img src="" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="status_log">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

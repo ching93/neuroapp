@@ -1,0 +1,13 @@
+#init-form table tr td {
+	float: left;
+	text-align: left;
+}
+.form-error {
+	color: red;
+}
+.form-success {
+	color: lightgreen;
+}
+input{
+	width: 70px;
+}
