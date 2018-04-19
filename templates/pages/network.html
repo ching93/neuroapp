@@ -8,6 +8,7 @@
             <div class="col-lg-4 col-lg-offset-2">
                 <form action="{% url 'network_edit' %}" method="GET" class="form form-vertical text-left" id="layers_form">
                     {% csrf_token %}
+                    <input type="hidden" name="edit">
                     <label>Редактирование архитектуры</label>
                     <div class="form-group text-left">
                         <span class="form-error">{{errorMessage}}</span>
@@ -46,21 +47,26 @@
                             <button onclick="removeLayer(event.srcElement)" type="button" class="btn btn-success btn-buy">Убрать слой</button>
                         </div>
                     </div>
-                    <div class="text-right">
+                    <div class="form-group text-right">
                         <button type="button" class="btn btn-success btn-add-layer">Добавить слой</button>
-                        <button type="submit" class="btn btn-success btn-submit-layer">Сохранить</button>
+                        <button type="submit" class="btn btn-success btn-submit-layer" data-action="edit">Сохранить</button>
                     </div>
                 </form>
             </div>
             <div class="col-lg-4">
-                <form action="{% url 'network_edit' %}" method="POST" class="form-inline text-center">
+                <form action="{% url 'network_edit' %}" method="GET" class="form-vertical text-left">
                     {% csrf_token %}
-                    <label>Редактирование архитектуры</label>
-                    <div>
-                        <label for="">Введите название</label>
-                        <input type="text" name="{{ networkModelForm.name.name }}">
+                    <input type="hidden" name="create">
+                    <div class="form-group">
+                        <label>Создание новой архитектуры</label>
+                        <div>
+                            <label for="">Введите название</label>
+                            <input type="text" name="{{ networkModelForm.name.name }}">
+                        </div>
                     </div>
-                    <button type="submit" id="submit_btn" class="btn btn-success btn-buy">Создать</button>
+                    <div class="form-group text-right">
+                        <button type="submit" id="submit_btn" class="btn btn-success btn-buy" data-action="create">Создать</button>
+                    </div>
                 </form>
             </div>
         </div>

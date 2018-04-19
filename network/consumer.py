@@ -6,8 +6,6 @@ from .network_tools import createNetwork, train
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-    	#self.room_name = self.scope['url_route']['kwargs']['room_name']
-    	#self.room_group_name = 'room_%s' % self.room_name
         print("connected to socket")
         self.accept()
 
@@ -19,7 +17,6 @@ class ChatConsumer(WebsocketConsumer):
         if (data['action']=='train'):
         	self.network_train(data)
 
-    # def train(model, model_name, epochs=5, input_type="2d", batch_size=128):
     def network_train(self,data):
       returnDict=dict()
       print('train data: ',data)
@@ -38,18 +35,18 @@ class ChatConsumer(WebsocketConsumer):
       batch_size = int(data['batch-size'])
       interval = [int(data['from']),int(data['till'])]
       
-      #try:
-      (av_err,pc) = train(model,data["model"],epochs=epochs,interval=interval,input_type=input_type, batch_size=batch_size,socket=self)
-      #except Exception:
-      #  returnDict["action"] = "error"
-      #  returnDict["message"] = "Ошибка во время обучения"
-      #  print("Ошибка во время обучения")
-      #  self.send(json.dumps(returnDict))
-      #  self.disconnect("Ошибка во время обучения")
-      #else:
-      returnDict['av-err']=av_err
-      returnDict['percent']=pc
-      returnDict['action']='test-end'
+      try:
+        (av_err,pc) = train(model,data["model"],epochs=epochs,interval=interval,input_type=input_type, batch_size=batch_size,socket=self)
+      except Exception:
+        returnDict["action"] = "error"
+        returnDict["message"] = "Ошибка во время обучения"
+        print("Ошибка во время обучения")
+        self.send(json.dumps(returnDict))
+        self.disconnect("Ошибка во время обучения")
+      else:
+        returnDict['av-err']=av_err
+        returnDict['percent']=pc
+        returnDict['action']='test-end'
       
-      self.send(json.dumps(returnDict))
-      self.disconnect('training finished')
+        self.send(json.dumps(returnDict))
+        self.disconnect('training finished')

@@ -8,6 +8,9 @@
 .form-success {
 	color: lightgreen;
 }
-input{
+input {
+	width: 150px;
+}
+input[type=number] {
 	width: 70px;
 }

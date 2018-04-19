@@ -92,9 +92,6 @@ $(function() {
             chatSocket.send(JSON.stringify(data));
         }
 
-        //});
-        //subscribe(url,data);
-        //return false;
     });
 });
 
