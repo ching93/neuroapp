@@ -54,46 +54,13 @@ def network_run(request):
     return render(request,'pages/network_run.html', locals())
 
 
-# def network_train(request):
-#     returnDict=dict()
-#     data=request.POST
-#     print(data)
-#     if data['action']=='model-select':
-#         print('model select')
-#         weights = Weight.objects.filter(model__name=data['model'])
-#         print(weights)
-#         for item in weights:
-#             returnDict[item.name]=item.name
-#         print(returnDict)
-#     elif data['action']=='train':
-#         print('model create')
-#         try:
-#             (model,input_type) = createNetwork(data["model"])
-#         except Exception:
-#             returnDict["success"] = 0
-#             returnDict["message"] = "Ошибка создания модели"
-#             print("Ошибка создания модели")
-#             return JsonResponse(returnDict)
-
-#         epochs = int(data['epochs'])
-#         batch_size = int(data['batch-size'])
-#         interval = [int(data['from']),int(data['till'])]
-#         print(interval)
-#         try:
-#             (y,pc) = train(model,data["model"],epochs=epochs,interval=interval,input_type=input_type, batch_size=batch_size)
-#         except Exception:
-#             returnDict["success"] = 0
-#             returnDict["message"] = "Ошибка во время обучения"
-#             print("Ошибка во время обучения")
-#             return JsonResponse(returnDict)
-
-#         returnDict['accurasy']=y
-#         returnDict['percent']=pc
-
-#     elif data['action']=='state-check':
-#         print('check')
-#         returnDict['loss']=common_data.loss
+def model_select(request):
+    returnDict=dict()
+    data=request.POST
+    print('model select')
+    weights = Weight.objects.filter(model__name=data['model'])
+    for item in weights:
+        returnDict[item.name]=item.name
+    print(returnDict)
     
-#     returnDict["success"] = 1
-#     returnDict["message"] = "Обучение завершено"
-#     return JsonResponse(returnDict)
+    return JsonResponse(returnDict)

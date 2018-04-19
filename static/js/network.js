@@ -40,20 +40,4 @@ $(function(){
     $('.layerType select').on('change',showFields);
     $('.layerType select').on('create',addLayerType);
     $('.btn-add-layer').on('click',addLayerType);
-    //$(".btn-submit-layer").on('submit',sendLayersForm)
 })
-
-function sendLayersForm(e) {
-    form = $("#layers_form");
-    url = form.attr('action');
-    model_name = $("#layers_form .model").val();
-    data.layers = [];
-    for (layer of form.find("div.layerType")) {
-        layer_data = get_only_data(layer);
-        layer_data['model'] = model_name;
-        data.layers.append(layer_data);
-    }
-    jqxhr = $.post(url, data).fail(show_message);
-
-    return false;
-}

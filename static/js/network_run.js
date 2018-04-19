@@ -2,7 +2,7 @@
 $(function() {
     $("#model-select-btn").on('click',function(e){
         modelName = $("#init-form .model-select select")[0].value;
-        url=$("#init-form").attr('action');
+        url='model_select';
         data1={};
         data1['csrfmiddlewaretoken']=$('#init-form [name="csrfmiddlewaretoken"]').val();
         data1['model']=modelName;
@@ -11,7 +11,6 @@ $(function() {
             method: 'POST',
             data: data1,
             success: function(data) {
-                //alert('Oh my god SUCCESS!');
                 weight_div = $("#init-form .weight-select")[0];
                 if ($(weight_div).find("select").length==0) {
                     select = document.createElement('select');
@@ -59,6 +58,7 @@ $(function() {
                 $("#status .error-val").html("0");
                 $("#status .acc-val").html("0");
                 $("#status .message").html("Обучение началось.");
+                $("#plot-model-div img").attr("src","static/images/model_scheme.png?"+Math.random());
                 break;
             case 'train-end':
                 $("#status .message").html("Обучение закончено. Проверка точности на тестовом множестве.");
@@ -96,33 +96,9 @@ $(function() {
 });
 
 
-
 function get_values(id) {
     res={}
     for (item of $("#"+id+" [name]"))
         res[item.name]=item.value;
     return res;
-}
-
-function subscribe(url) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.onreadystatechange = function() {
-    if (this.readyState != 4) {
-        console.log("training ended");
-        return;
-    }
-
-    if (this.status == 200) {
-        console.log(xhr.responseText);
-    } else {
-        throw 'Error';
-    }
-
-    data['action']='state-check';
-    sleep(2000)
-    subscribe(url,data);
-  }
-  xhr.open("POST", url, true);
-  xhr.send(data);
 }
