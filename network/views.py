@@ -24,12 +24,12 @@ def network(request):
                     networkLayers = NetworkLayers.objects.create(orderNumber=i,layerType=layer,model=model,kernelAmount=kernel_amount,kernelSize=kernel_size,neuronAmount=neuron_amount)
                     print("object created")
                 except Exception:
-                    print("ошибка сохранения")
-                    errorMessage = "Неправильные данные"
+                    print("save error")
+                    errorMessage = "incorrect data"
                     break
                 else:
-                    print("изменения сохранены")
-                    successMessage = "Изменения сохранены"
+                    print("changes are saved")
+                    successMessage = "changes are saved"
                 i=i+1
             networkModelForm = NetworkModelForm()
         elif data.get('create',None)!=None:
@@ -37,11 +37,11 @@ def network(request):
             if networkModelForm.is_valid():
                 print(networkModelForm.cleaned_data)
                 networkModelForm.save()
-                print("изменения сохранены")
-                successMessage = "Изменения сохранены"
+                print("changes are saved")
+                successMessage = "changes are saved"
             else:
                 print(networkModelForm.errors)
-                errorMessage = "Неправильные данные"
+                errorMessage = "incorrect data"
 
     networkLayersForm = NetworkLayersForm()
     return render(request, 'pages/network.html', locals())

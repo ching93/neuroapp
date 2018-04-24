@@ -9,23 +9,23 @@
                 <form action="/ws/network/train/" method="POST" class="form-vertical text-left" id="init-form">
                     {% csrf_token %}
                     <div class="form-group model-select text-left">
-                        <label>Выберите архитектуру</label>
+                        <label>Select architechture:</label>
                         {{ networkLayersForm.model }}
-                        <button class="btn btn-success" id="model-select-btn">Выбрать</button>
+                        <button class="btn btn-success" id="model-select-btn">OK</button>
                     </div>
                     <div class="form-group weight-select text-left" hidden>
-                        <label>Выберите набор весов</label>
+                        <label>Weight coeff. set</label>
                     </div>
                     <div class="form-group text-left">
-                        <label for="">Количество эпох</label>
+                        <label for="">Epochs:</label>
                         <input type="number" name="epochs" value='5'>
                     </div>
                     <div class="form-group text-left">
-                        <label>Интервал примеров</label>
-                        <span>С </span><input type="number" name="from" value=1><span> По </span><input type="number" name="till" value=100>
+                        <label>Input interval:</label>
+                        <span>From </span><input type="number" name="from" value=1><span> till </span><input type="number" name="till" value=100>
                     </div>
                     <div class="form-group text-left">
-                        <label>Количество примеров в партии</label>
+                        <label>Batches:</label>
                         <input type="number" name="batch-size" value='5'>
                     </div>
                     <div id="plot-model-div">
@@ -37,13 +37,13 @@
                 <button class="btn btn-success btn-buy" id="start-learn-btn">Начать обучение</button>
                 <div class="status" id='status' hidden >
                     <p class="message"></p>
-                    <p>Ошибка: <span class="error-val"></span>.</p>
-                    <p>Точность: <span class="acc-val"></span>.</p>
-                    <p>Эпохи: <span class="current-epoch"></span> из <span class="epochs"></span></p>
-                    <p>Партии: <span class="current-batch"></span> из <span class="batches"></span></p>
+                    <p>Error: <span class="error-val"></span>.</p>
+                    <p>Accurasy: <span class="acc-val"></span>.</p>
+                    <p>Epochs: <span class="current-epoch"></span> из <span class="epochs"></span></p>
+                    <p>Batches: <span class="current-batch"></span> из <span class="batches"></span></p>
                     <div class="test-result" hidden>
-                        <p>Точность на тестовом множестве: <span class="test-err"></span></p>
-                        <p>% правильно распознанных примеров: <span class="percent"></span></p>
+                        <p>Accurasy on test set: <span class="test-err"></span></p>
+                        <p>% of correctly classified images: <span class="percent"></span></p>
                     </div>
                 </div>
                 <div id="plot-div">
