@@ -4,11 +4,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import model_from_json
-import os
 import matplotlib.pyplot as ppl
 import numpy as np
 import h5py
-import pdb
 
 
 def create_conv_model(kernel_sizes, kernel_nums, pool_sizes=[(2, 2)], dense_layer_sizes=[128, 64]):
@@ -22,18 +20,23 @@ def create_conv_model(kernel_sizes, kernel_nums, pool_sizes=[(2, 2)], dense_laye
     initializer = keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
 
     model = Sequential()
-    model.add(Conv2D(kernel_nums[0], kernel_size=kernel_sizes[0], activation='relu', input_shape=input_shape, kernel_initializer=initializer))
+    model.add(Conv2D(kernel_nums[0], kernel_size=kernel_sizes[0],
+                     activation='relu', input_shape=input_shape, kernel_initializer=initializer))
     model.add(MaxPooling2D(pool_size=pool_sizes[0]))
     for i in range(0, conv_layers):
-        if i==0:
-            model.add(Conv2D(kernel_nums[0], kernel_size=kernel_sizes[0], activation='relu', input_shape=input_shape, kernel_initializer=initializer))
+        if i == 0:
+            model.add(Conv2D(kernel_nums[0], kernel_size=kernel_sizes[0],
+                             activation='relu', input_shape=input_shape, kernel_initializer=initializer))
         else:
-            model.add(Conv2D(kernel_nums[i], kernel_size=kernel_sizes[i], activation='relu', kernel_initializer=initializer))
+            model.add(Conv2D(kernel_nums[i], kernel_size=kernel_sizes[i],
+                             activation='relu', kernel_initializer=initializer))
         model.add(MaxPooling2D(pool_size=pool_sizes[i]))
     model.add(Flatten())
     for i in range(0, len(dense_layer_sizes)):
-        model.add(Dense(dense_layer_sizes[i], activation='relu', kernel_initializer=initializer))
-    model.add(Dense(num_classes, activation='softmax', kernel_initializer=initializer))
+        model.add(
+            Dense(dense_layer_sizes[i], activation='relu', kernel_initializer=initializer))
+    model.add(Dense(num_classes, activation='softmax',
+                    kernel_initializer=initializer))
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                   optimizer=keras.optimizers.Adadelta(),
@@ -45,14 +48,16 @@ def create_conv_model(kernel_sizes, kernel_nums, pool_sizes=[(2, 2)], dense_laye
 def create_mp_model(layer_sizes):
     input_shape = (784,)
     num_classes = 10
-    mp_layers = len(layer_sizes)
 
     model = Sequential()
     initializer = keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
-    model.add(Dense(layer_sizes[0], activation='relu', input_shape=input_shape, kernel_initializer=initializer))
+    model.add(Dense(layer_sizes[0], activation='relu',
+                    input_shape=input_shape, kernel_initializer=initializer))
     for i in range(1, len(layer_sizes)):
-        model.add(Dense(layer_sizes[i], activation='relu', kernel_initializer=initializer))
-    model.add(Dense(num_classes, activation='softmax', kernel_initializer=initializer))
+        model.add(
+            Dense(layer_sizes[i], activation='relu', kernel_initializer=initializer))
+    model.add(Dense(num_classes, activation='softmax',
+                    kernel_initializer=initializer))
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                   optimizer=keras.optimizers.Adadelta(),
@@ -80,16 +85,14 @@ def load_mnist(load_valid=True, path="mnist.hdf5", normalize=True, input_type='2
         return (xtrain, ytrain), (xtest, ytest)
 
 
-
 def save_model(fname, model):
     with open('{}.json'.format(fname), 'w') as json_file:
         json_file.write(model.to_json())
-    # plot_model(model,'{}.png'.format(fname),show_shapes=True)
     print('model saved')
+
 
 def evaluate(model, xtest, ytest):
     y = model.predict(xtest)
-    ##err = np.sum((y-ytest)**2)/y.shape[0]
     score = keras.losses.categorical_crossentropy(y, ytest)
     percent = predict_percent(y, ytest)
     return (score[0], score[1], percent)
@@ -111,7 +114,6 @@ def predict_percent(y, label, acc=0.01):
     n = y.shape[0]
     m = 0.0
     for i in range(1, y.shape[0]):
-        max_index = np.argmax(y[i])
         dy = np.abs(y[i] - label[i])
         for j in range(0, len(dy)):
             if (dy[j] > acc):
@@ -119,7 +121,8 @@ def predict_percent(y, label, acc=0.01):
                 break
     return m / n * 100
 
-def average_error(y,label):
+
+def average_error(y, label):
     n = y.shape[0]
     err = 0
     for i in range(1, y.shape[0]):
@@ -127,18 +130,18 @@ def average_error(y,label):
     print('error: %d' % err)
     return err/n
 
-def save_plot(err,acc,path,name):
-    fig = ppl.figure()
-    ppl.plot(err,color='red',label='error')
-    ppl.plot(acc,color='blue',label='accurasy')
+
+def save_plot(err, acc, path, name):
+    ppl.plot(err, color='red', label='error')
+    ppl.plot(acc, color='blue', label='accurasy')
     ppl.grid(True)
     ppl.legend()
-    #try:
+    try:
+        print("fullpath: %s" % path+'/'+name)
+        ppl.savefig(path+'/'+name)
+    except Exception:
+        print("не удалось сохранить")
 
-    print("fullpath: %s" % path+'/'+name)
-    ppl.savefig(path+'/'+name)
-    #except Exception:
-    #    print("не удалось сохранить")
 
 def save_result(fname, model_name, result):
     f = open(fname, 'a')

@@ -1,27 +1,26 @@
 from django.shortcuts import render
-from .forms import *
-from .network_tools import *
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from .forms import NetworkModelForm, NetworkLayersForm, WeightForm
+from django.http import JsonResponse
 from .models import Weight, NetworkModel, LayerType, NetworkLayers
-from keras.utils import plot_model
 
 
 def network(request):
-    if request.method=='GET' and request.GET:
+    if request.method == 'GET' and request.GET:
         data = request.GET
-        if data.get('edit',None)!=None:
+        if data.get('edit', None) is not None:
             print('form:')
             print(data)
             print('endform')
-            modelName = data['model']
-            NetworkLayers.objects.filter(model__name=modelName).delete()
-            i=1
-            for layerType,kernel_amount,kernel_size,neuron_amount in zip(data.getlist('layerType'),data.getlist('kernelAmount'),data.getlist('kernelSize'),data.getlist('neuronAmount')):
-                model = NetworkModel.objects.get(name=modelName)
+            model_name = data['model']
+            NetworkLayers.objects.filter(model__name=model_name).delete()
+            i = 1
+            for layerType, kernel_amount, kernel_size, neuron_amount in zip(data.getlist('layerType'), data.getlist('kernelAmount'), data.getlist('kernelSize'), data.getlist('neuronAmount')):
+                model = NetworkModel.objects.get(name=model_name)
                 layer = LayerType.objects.get(name=layerType)
-                print("model %s, layer %s" % (model,layer))
+                print("model %s, layer %s" % (model, layer))
                 try:
-                    networkLayers = NetworkLayers.objects.create(orderNumber=i,layerType=layer,model=model,kernelAmount=kernel_amount,kernelSize=kernel_size,neuronAmount=neuron_amount)
+                    networkLayers = NetworkLayers.objects.create(
+                        orderNumber=i, layerType=layer, model=model, kernelAmount=kernel_amount, kernelSize=kernel_size, neuronAmount=neuron_amount)
                     print("object created")
                 except Exception:
                     print("save error")
@@ -30,9 +29,9 @@ def network(request):
                 else:
                     print("changes are saved")
                     successMessage = "changes are saved"
-                i=i+1
+                i = i+1
             networkModelForm = NetworkModelForm()
-        elif data.get('create',None)!=None:
+        elif data.get('create', None) is not None:
             networkModelForm = NetworkModelForm(data)
             if networkModelForm.is_valid():
                 print(networkModelForm.cleaned_data)
@@ -51,16 +50,16 @@ def network_run(request):
     networkLayersForm = NetworkLayersForm()
     networkModelForm = NetworkModelForm()
     weightForm = WeightForm()
-    return render(request,'pages/network_run.html', locals())
+    return render(request, 'pages/network_run.html', locals())
 
 
 def model_select(request):
-    returnDict=dict()
-    data=request.POST
+    return_dict = dict()
+    data = request.POST
     print('model select')
     weights = Weight.objects.filter(model__name=data['model'])
     for item in weights:
-        returnDict[item.name]=item.name
-    print(returnDict)
-    
-    return JsonResponse(returnDict)
+        return_dict[item.name] = item.name
+    print(return_dict)
+
+    return JsonResponse(return_dict)
